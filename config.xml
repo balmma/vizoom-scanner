@@ -2,15 +2,12 @@
 <widget xmlns = "http://www.w3.org/ns/widgets"
     xmlns:gap = "http://phonegap.com/ns/1.0"
     id        = "ch.vizoom.scanner"
-    versionCode="10" 
     version   = "1.0.0">
-
-<!-- versionCode is optional and Android only -->
 
   <name>Vizoom Scanner</name>
 
   <description>
-      Vizoom Scanner. 
+      Vizoom Scanner
   </description>
 
   <author href="http://vizoom.ch" email="info@vizoom.ch">
@@ -19,6 +16,7 @@
 
   <preference name="orientation" value="portrait" />
   <preference name="fullscreen" value="true" />
+  
   <icon src="icon.png">
 
   <preference name="permissions" value="none"/>
