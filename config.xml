@@ -10,14 +10,12 @@
       Vizoom Scanner
   </description>
 
-  <author href="http://vizoom.ch" email="info@vizoom.ch">
-      Vizoom
-  </author>
+  <author href="http://vizoom.ch" email="info@vizoom.ch">Vizoom</author>
 
   <preference name="orientation" value="portrait" />
   <preference name="fullscreen" value="true" />
   
-  <icon src="icon.png">
+  <icon src="icon.png" />
 
   <preference name="permissions" value="none"/>
   <feature name="http://api.phonegap.com/1.0/camera"/>
