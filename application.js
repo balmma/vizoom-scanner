@@ -10,7 +10,7 @@ $( document ).bind( "mobileinit", function() {
   $.support.cors = true;
   $.mobile.allowCrossDomainPages = true;
   $.mobile.defaultPageTransition = 'fade';
-  $.mobile.touchOverflowEnabled = true;
+  $.mobile.touchOverflowEnabled = true;  
 });
 
 var fixgeometry = function() {  
@@ -124,7 +124,7 @@ function verify(){
 function login(u,p){
   username = u;
   password = p;
-  jQuery.request('GET',ROOT+'check_login',{},function(res){show_events();},function(res){$('#login_status').html("Ungültiges Login");});     
+  request('GET',ROOT+'check_login',{},function(res){show_events();},function(res){$('#login_status').html("Ungültiges Login");});     
 }
 
 function request(type,url,data,success,error){
