@@ -14,7 +14,9 @@
 
   <preference name="orientation" value="portrait" />
   <preference name="fullscreen" value="true" />
-    
+  
+  <icon src="icon.png" width="345" height="345" />
+
   <icon src="icon_96.png" gap:platform="android" gap:density="xhdpi"  />
   <icon src="icon_72.png" gap:platform="android" gap:density="hdpi" />
   <icon src="icon_48.png" gap:platform="android" gap:density="mdpi" />
