@@ -27,7 +27,7 @@ var reset_view = function(){
 };
 
 $(document).ready(function() {  
-  $(window).bind('orientationchange resize pageshow', fixgeometry);
+  //$(window).bind('orientationchange resize pageshow', fixgeometry);
   //$(window).bind('pageshow', reset_view);  
 });
 
