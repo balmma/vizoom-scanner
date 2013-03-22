@@ -28,7 +28,7 @@ var reset_view = function(){
 
 $(document).ready(function() {  
   $(window).bind('orientationchange resize pageshow', fixgeometry);
-  $(window).bind('pageshow', reset_view);  
+  //$(window).bind('pageshow', reset_view);  
 });
 
 document.addEventListener("deviceready", function(){
