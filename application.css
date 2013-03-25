@@ -38,8 +38,7 @@ background-image: -o-linear-gradient(#72ff72,#3bff3b);
 background-image: linear-gradient(#72ff72,#3bff3b);
 }
 
-#user_info p,
-#user_info h2 {
-  width: 100%;
-  display: block;
+#user_info label {
+  width: 100px;
+  display: inline-block;
 }

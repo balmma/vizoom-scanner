@@ -51,7 +51,7 @@ function time_string(time){
 function update_user_data(){
   if(json){
     var user = json.user;
-    text = '<p><label style="display:inline-block;width:100px;">Name:</label>'+user.firstname+' '+user.surname+'</p><p><label style="display:inline-block;width:100px;">E-Mail:</label>'+user.email+'</p><p<label style="display:inline-block;width:100px;">Geburtstag:</label>'+user.birthday+'</p><p style="font-weight:bold;"><label style="display:inline-block;width:100px;font-weight:bold">Alter:</label>'+user.age+'</p>';
+    var text = '<p><label>Name:</label>'+user.firstname+' '+user.surname+'</p><p><label>E-Mail:</label>'+user.email+'</p><p><label>Geburtstag:</label>'+user.birthday+'</p><p><label>Alter:</label>'+user.age+'</p>';
     if(json.status == 'confirmed_as_guest'){
       text = text + '<h2>Gast -> Kostenloser Eintritt</h2>';
     }else if(json.status == 'confirmed_as_guest'){
@@ -85,14 +85,16 @@ function update_verify_user_data(user){
 }
 
 function scan() {
-  new BarcodeScanner().scan(function(result) {
-    reset_view();
-    var token = result.text.split(';');
-    var surname = token[0];
-    var firstname = token[1];
-    secret = token[2];
+  // new BarcodeScanner().scan(function(result) {
+  //   reset_view();
+  //   var token = result.text.split(';');
+  //   var surname = token[0];
+  //   var firstname = token[1];
+  //   var secret = token[2];
+    var secret = "18y6fuhum8"
     if(secret){
-      $('#user_info').html('Loading data for '+ firstname + ' ' + surname + ' ...'); 
+      //$('#user_info').html('Loading data for '+ firstname + ' ' + surname + ' ...'); 
+      
       request('PUT',ROOT+'participation/validate',{'user_secret': secret,'event_id': event_id},function(res){
         json = res;
         var user = json.user;
@@ -110,7 +112,7 @@ function scan() {
       $('#user_info').html("<h2>Kein gültiger Code</h2>");     
     }
     setTimeout(fixgeometry,500);     
-  });      
+  //});      
 }
 
 function verify(){  
