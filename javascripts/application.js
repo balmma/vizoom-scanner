@@ -85,34 +85,44 @@ function update_verify_user_data(user){
 }
 
 function scan() {
-  // new BarcodeScanner().scan(function(result) {
-  //   reset_view();
-  //   var token = result.text.split(';');
-  //   var surname = token[0];
-  //   var firstname = token[1];
-  //   var secret = token[2];
-    var secret = "18y6fuhum8"
-    if(secret){
-      //$('#user_info').html('Loading data for '+ firstname + ' ' + surname + ' ...'); 
-      
-      request('PUT',ROOT+'participation/validate',{'user_secret': secret,'event_id': event_id},function(res){
-        json = res;
-        var user = json.user;
-        if(user){
-          update_verify_user_data(user);  
-          $.mobile.changePage('#verify_dialog', 'pop', true, true);
-        }else{         
-          $('body').addClass('denied');
-          $('#user_info').html("<h2>Kein gültiger Code</h2>");   
-        }
-               
-      });
-    }else{
-      $('body').addClass('denied');
-      $('#user_info').html("<h2>Kein gültiger Code</h2>");     
-    }
-    setTimeout(fixgeometry,500);     
-  //});      
+  var secret = "18y6fuhum8"
+  
+  if(window.BarcodeScanner){
+    new BarcodeScanner().scan(function(result) {
+      reset_view();
+      var token = result.text.split(';');
+      var surname = token[0];
+      var firstname = token[1];
+      var secret = token[2];
+
+      process_secret(secret,surname,firstname);
+    });         
+  }else {
+    process_secret("18y6fuhum8","Balmer","Matthias");
+  }  
+}
+
+function process_secret(secret,surname,firstname){
+  if(secret && surname && firstname){
+    $('#user_info').html('Loading data for '+ firstname + ' ' + surname + ' ...'); 
+    
+    request('PUT',ROOT+'participation/validate',{'user_secret': secret,'event_id': event_id},function(res){
+      json = res;
+      var user = json.user;
+      if(user){
+        update_verify_user_data(user);  
+        $.mobile.changePage('#verify_dialog', 'pop', true, true);
+      }else{         
+        $('body').addClass('denied');
+        $('#user_info').html("<h2>Kein gültiger Code</h2>");   
+      }
+             
+    });
+  }else{
+    $('body').addClass('denied');
+    $('#user_info').html("<h2>Kein gültiger Code</h2>");     
+  }
+  setTimeout(fixgeometry,500);
 }
 
 function verify(){  
