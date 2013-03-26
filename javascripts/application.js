@@ -85,8 +85,7 @@ function update_verify_user_data(user){
 }
 
 function scan() {
-  var secret = "18y6fuhum8"
-  
+    
   if(window.BarcodeScanner){
     new BarcodeScanner().scan(function(result) {
       reset_view();
