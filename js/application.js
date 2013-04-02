@@ -92,7 +92,7 @@ function scan() {
       try
       {
         alert(event);
-        alert(JSON.stringify(event));
+        
 
         reset_view();
         
@@ -186,6 +186,7 @@ function show_events(){
       $('#'+list_event.id).click(function(){
         event = list_event;        
         $('#event_title').html(event.name);
+        alert(JSON.stringify(event));
         $.mobile.changePage('#scan', 'fade', true, true);
       });
     });    
