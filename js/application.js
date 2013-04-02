@@ -226,6 +226,8 @@ function decrypt_code(encrypted_code,n,e){
   // remove padding
   decrypted_code = decrypted_code.toString(16).replace(/^1f+00/, '');
 
+  alert(decrypted_code);
+
   return hex2bin(decrypted_code);   
 }
 
