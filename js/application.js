@@ -5,7 +5,7 @@ var secret = null;
 var username = null;
 var password = null;
 
-var event = {};
+var event = null;
 
 $( document ).bind( "mobileinit", function() {  
   $.support.cors = true;
@@ -89,8 +89,9 @@ function scan() {
     
   if(window.BarcodeScanner){
     new BarcodeScanner().scan(function(result) {
+      alert(event);
       reset_view();
-      alert(JSON.stringify(event));
+      
       result = decrypt_code(result,event.key_n,event.key_e);
       var token = result.text.split(',');
       if(token.length == 9){
