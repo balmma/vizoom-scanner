@@ -216,10 +216,14 @@ function decrypt_code(encrypted_code,n,e){
   alert('n:' + n);
   alert('e:' + e);
 
+  alert(encrypted_code);
+
   var rsa = new RSAKey();      
   rsa.setPublic(n,e);
 
   encrypted_code = bin2hex(encrypted_code);
+
+  alert(encrypted_code);
       
   var decrypted_code = rsa.doPublic(parseBigInt(encrypted_code,16));
       
