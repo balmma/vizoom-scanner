@@ -2,9 +2,6 @@ ROOT = 'http://vizoom.smss.ch/_rest/';
 
 var json = null;
 var secret = null;
-var event_id = null;
-var event_key_n = null;
-var event_key_e = null;
 var username = null;
 var password = null;
 
@@ -209,6 +206,9 @@ function bin2hex (bin)
 }
 
 function decrypt_code(encrypted_code,n,e){
+  alert('n:' + n);
+  alert('e:' + e);
+
   var rsa = new RSAKey();      
   rsa.setPublic(n,e);
 
