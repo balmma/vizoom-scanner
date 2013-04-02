@@ -89,7 +89,10 @@ function scan() {
     
   if(window.BarcodeScanner){
     new BarcodeScanner().scan(function(result) {
+      try{
       alert(event);
+      alert(JSON.stringify(event));
+
       reset_view();
       
       result = decrypt_code(result,event.key_n,event.key_e);
@@ -107,6 +110,9 @@ function scan() {
           birthday: token[8] && token[8].length > 0 ? moment(token[8],'DD-MM-YYYY') : null
         };
         process_data(data);
+        }catch(e){
+          alert(e);
+        }
       }else {
         show_code_invalid();
       }       
