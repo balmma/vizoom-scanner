@@ -90,6 +90,7 @@ function scan() {
   if(window.BarcodeScanner){
     new BarcodeScanner().scan(function(result) {
       reset_view();
+      alert(JSON.stringify(event));
       result = decrypt_code(result,event.key_n,event.key_e);
       var token = result.text.split(',');
       if(token.length == 9){
@@ -174,8 +175,7 @@ function show_events(){
       var list_event = ev;
       list.append('<li id="'+list_event.id+'"><h3>'+list_event.name+'</h3><p>'+list_event.start_time+'</p></li>');
       $('#'+list_event.id).click(function(){
-        event = list_event;
-        alert(JSON.stringify(event));
+        event = list_event;        
         $('#event_title').html(event.name);
         $.mobile.changePage('#scan', 'fade', true, true);
       });
