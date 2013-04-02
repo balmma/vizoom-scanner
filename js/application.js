@@ -178,6 +178,7 @@ function show_events(){
       list.append('<li id="'+list_event.id+'"><h3>'+list_event.name+'</h3><p>'+list_event.start_time+'</p></li>');
       $('#'+list_event.id).click(function(){
         event = list_event;
+        alert(JSON.stringify(event));
         $('#event_title').html(event.name);
         $.mobile.changePage('#scan', 'fade', true, true);
       });
