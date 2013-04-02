@@ -3,8 +3,12 @@ ROOT = 'http://vizoom.smss.ch/_rest/';
 var json = null;
 var secret = null;
 var event_id = null;
+var event_key_n = null;
+var event_key_e = null;
 var username = null;
 var password = null;
+
+var event = null;
 
 $( document ).bind( "mobileinit", function() {  
   $.support.cors = true;
@@ -89,46 +93,54 @@ function scan() {
   if(window.BarcodeScanner){
     new BarcodeScanner().scan(function(result) {
       reset_view();
-      result = decrypt_code(result,event_key_n,event_key_e);
+      result = decrypt_code(result,event.key_n,event.key_e);
       var token = result.text.split(',');
-      if(token.length >= 5){
-        var participation_id = token[0];
-        var event_id = token[1]
+      if(token.length == 9){
+        var data = {
+          participation_id: token[0],
+          event_id: token[1],
+          type: token[2],
+          status: token[3],
+          surname: token[4],
+          firstname: token[5],
+          citycode: token[6],
+          city: token[7],
+          birthday: token[8] && token[8].length > 0 ? moment(token[8],'DD-MM-YYYY') : null
+        };
+        process_data(data);
       }else {
-        $('body').addClass('denied');
-        $('#user_info').html("<h2>Kein gültiger Code</h2>"); 
-      }
-      var surname = token[0];
-      var firstname = token[1];
-      var secret = token[2];
-
-      process_secret(secret,surname,firstname);
+        show_code_invalid();
+      }       
     });         
   }else {
-    process_secret("18y6fuhum8","Balmer","Matthias");
+    //process_secret("18y6fuhum8","Balmer","Matthias");
   }  
 }
 
-function process_secret(secret,surname,firstname){
-  if(secret && surname && firstname){
-    $('#user_info').html('Loading data for '+ firstname + ' ' + surname + ' ...'); 
+function show_code_invalid(){
+  $('body').addClass('denied');
+  $('#user_info').html("<h2>Kein gültiger Code</h2>"); 
+}
+
+function process_data(data){
+  alert(JSON.stringify(data));
+  // if(secret && surname && firstname){
+  //   $('#user_info').html('Loading data for '+ firstname + ' ' + surname + ' ...'); 
     
-    request('PUT',ROOT+'participation/validate',{'user_secret': secret,'event_id': event_id},function(res){
-      json = res;
-      var user = json.user;
-      if(user){
-        update_verify_user_data(user);  
-        $.mobile.changePage('#verify_dialog', 'pop', true, true);
-      }else{         
-        $('body').addClass('denied');
-        $('#user_info').html("<h2>Kein gültiger Code</h2>");   
-      }
+  //   request('PUT',ROOT+'participation/validate',{'user_secret': secret,'event_id': event_id},function(res){
+  //     json = res;
+  //     var user = json.user;
+  //     if(user){
+  //       update_verify_user_data(user);  
+  //       $.mobile.changePage('#verify_dialog', 'pop', true, true);
+  //     }else{         
+  //       show_code_invalid();   
+  //     }
              
-    });
-  }else{
-    $('body').addClass('denied');
-    $('#user_info').html("<h2>Kein gültiger Code</h2>");     
-  }
+  //   });
+  // }else{
+  //   show_code_invalid();    
+  // }
   setTimeout(fixgeometry,500);
 }
 
@@ -161,13 +173,11 @@ function request(type,url,data,success,error){
 function show_events(){
   request('GET',ROOT+'validator/events',{},function(res){
     var list = $("#event_list");
-    jQuery.each(res,function(index){
-      var event = res[index];
-      list.append('<li id="'+event.id+'"><h3>'+event.name+'</h3><p>'+event.start_time+'</p></li>');
-      $('#'+event.id).click(function(){
-        event_id = event.id;
-        event_key_n = event.key_n;
-        event_key_e = event.key_e;
+    _.each(res,function(ev){
+      var list_event = ev;
+      list.append('<li id="'+list_event.id+'"><h3>'+list_event.name+'</h3><p>'+list_event.start_time+'</p></li>');
+      $('#'+list_event.id).click(function(){
+        event = list_event;
         $('#event_title').html(event.name);
         $.mobile.changePage('#scan', 'fade', true, true);
       });
