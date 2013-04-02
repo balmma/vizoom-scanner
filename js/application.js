@@ -94,8 +94,8 @@ function scan() {
 
         reset_view();
         
-        result = decrypt_code(result,selected_event.key_n,selected_event.key_e);
-        var token = result.text.split(',');
+        result = decrypt_code(result.text,selected_event.key_n,selected_event.key_e);
+        var token = result.split(',');
         if(token.length == 9){
           var data = {
             participation_id: token[0],
