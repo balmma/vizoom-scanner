@@ -5,7 +5,7 @@ var secret = null;
 var username = null;
 var password = null;
 
-var event = null;
+var selected_event = null;
 
 $( document ).bind( "mobileinit", function() {  
   $.support.cors = true;
@@ -90,13 +90,11 @@ function scan() {
   if(window.BarcodeScanner){
     new BarcodeScanner().scan(function(result) {
       try
-      {
-        alert(event);
-        
+      {               
 
         reset_view();
         
-        result = decrypt_code(result,event.key_n,event.key_e);
+        result = decrypt_code(result,selected_event.key_n,selected_event.key_e);
         var token = result.text.split(',');
         if(token.length == 9){
           var data = {
@@ -184,9 +182,8 @@ function show_events(){
       var list_event = ev;
       list.append('<li id="'+list_event.id+'"><h3>'+list_event.name+'</h3><p>'+list_event.start_time+'</p></li>');
       $('#'+list_event.id).click(function(){
-        event = list_event;        
-        $('#event_title').html(event.name);
-        alert(JSON.stringify(event));
+        selected_event = list_event;        
+        $('#event_title').html(selected_event.name);        
         $.mobile.changePage('#scan', 'fade', true, true);
       });
     });    
