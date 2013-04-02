@@ -89,7 +89,15 @@ function scan() {
   if(window.BarcodeScanner){
     new BarcodeScanner().scan(function(result) {
       reset_view();
-      var token = result.text.split(';');
+      result = decrypt_code(result,event_key_n,event_key_e);
+      var token = result.text.split(',');
+      if(token.length >= 5){
+        var participation_id = token[0];
+        var event_id = token[1]
+      }else {
+        $('body').addClass('denied');
+        $('#user_info').html("<h2>Kein gültiger Code</h2>"); 
+      }
       var surname = token[0];
       var firstname = token[1];
       var secret = token[2];
@@ -158,12 +166,49 @@ function show_events(){
       list.append('<li id="'+event.id+'"><h3>'+event.name+'</h3><p>'+event.start_time+'</p></li>');
       $('#'+event.id).click(function(){
         event_id = event.id;
+        event_key_n = event.key_n;
+        event_key_e = event.key_e;
         $('#event_title').html(event.name);
         $.mobile.changePage('#scan', 'fade', true, true);
       });
     });    
     $.mobile.changePage('#select_event', 'fade', true, true);
   }); 
+}
+
+function hex2bin(hex)
+{
+  var bytes = [], str;
+
+  for(var i=0,il=hex.length-1; i<il; i+=2)
+      bytes.push(parseInt(hex.substr(i, 2), 16));
+
+  return String.fromCharCode.apply(String, bytes);    
+}
+
+function bin2hex (bin)
+{
+  var i = 0, l = bin.length, chr, hex = '';
+  for (i; i < l; ++i)
+  {
+    chr = bin.charCodeAt(i).toString(16);
+    hex += chr.length < 2 ? '0' + chr : chr;
+  }
+  return hex;
+}
+
+function decrypt_code(encrypted_code,n,e){
+  var rsa = new RSAKey();      
+  rsa.setPublic(n,e);
+
+  encrypted_code = bin2hex(encrypted_code);
+      
+  var decrypted_code = rsa.doPublic(parseBigInt(encrypted_code,16));
+      
+  // remove padding
+  decrypted_code = decrypted_code.toString(16).replace(/^1f+00/, '');
+
+  return hex2bin(decrypted_code);   
 }
 
 
