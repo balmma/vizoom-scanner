@@ -89,32 +89,34 @@ function scan() {
     
   if(window.BarcodeScanner){
     new BarcodeScanner().scan(function(result) {
-      try{
-      alert(event);
-      alert(JSON.stringify(event));
+      try
+      {
+        alert(event);
+        alert(JSON.stringify(event));
 
-      reset_view();
-      
-      result = decrypt_code(result,event.key_n,event.key_e);
-      var token = result.text.split(',');
-      if(token.length == 9){
-        var data = {
-          participation_id: token[0],
-          event_id: token[1],
-          type: token[2],
-          status: token[3],
-          surname: token[4],
-          firstname: token[5],
-          citycode: token[6],
-          city: token[7],
-          birthday: token[8] && token[8].length > 0 ? moment(token[8],'DD-MM-YYYY') : null
-        };
-        process_data(data);
-        }catch(e){
-          alert(e);
+        reset_view();
+        
+        result = decrypt_code(result,event.key_n,event.key_e);
+        var token = result.text.split(',');
+        if(token.length == 9){
+          var data = {
+            participation_id: token[0],
+            event_id: token[1],
+            type: token[2],
+            status: token[3],
+            surname: token[4],
+            firstname: token[5],
+            citycode: token[6],
+            city: token[7],
+            birthday: token[8] && token[8].length > 0 ? moment(token[8],'DD-MM-YYYY') : null
+          };
+          process_data(data);
+        
+        }else {
+          show_code_invalid();
         }
-      }else {
-        show_code_invalid();
+      }catch(e){
+          alert(e);
       }       
     });         
   }else {
