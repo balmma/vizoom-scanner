@@ -95,6 +95,9 @@ function scan() {
         reset_view();
         
         var code = decrypt_code(result.text,selected_event.key_n,selected_event.key_e);
+        
+        alert(code);
+
         var token = code.split(',');
         if(token.length == 9){
           var data = {
@@ -213,25 +216,17 @@ function bin2hex (bin)
 }
 
 function decrypt_code(encrypted_code,n,e){
-  alert('n:' + n);
-  alert('e:' + e);
-
-  alert(encrypted_code);
 
   var rsa = new RSAKey();      
   rsa.setPublic(n,e);
 
   encrypted_code = bin2hex(encrypted_code);
-
-  alert(encrypted_code);
-      
+       
   var decrypted_code = rsa.doPublic(parseBigInt(encrypted_code,16));
       
   // remove padding
   decrypted_code = decrypted_code.toString(16).replace(/^1f+00/, '');
-
-  alert(decrypted_code);
-
+  
   return hex2bin(decrypted_code);   
 }
 
