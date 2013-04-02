@@ -5,7 +5,7 @@ var secret = null;
 var username = null;
 var password = null;
 
-var event = null;
+var event = {};
 
 $( document ).bind( "mobileinit", function() {  
   $.support.cors = true;
