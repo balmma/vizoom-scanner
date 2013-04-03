@@ -93,6 +93,8 @@ function scan() {
       {               
 
         reset_view();
+
+        alert(selected_event.name);
         
         var code = decrypt_code(result.text,selected_event.key_n,selected_event.key_e);
         
