@@ -95,6 +95,10 @@ function scan() {
         reset_view();
 
         alert(selected_event.name);
+
+        alert(result.text);
+
+        alert(result.text.length);
         
         var code = decrypt_code(result.text,selected_event.key_n,selected_event.key_e);
         
@@ -186,7 +190,7 @@ function show_events(){
     _.each(res,function(ev){
       var list_event = ev;
       list.append('<li id="'+list_event.id+'"><h3>'+list_event.name+'</h3><p>'+list_event.start_time+'</p></li>');
-      $('#'+list_event.id).click(function(){
+      $('#'+list_event.id).click(function(ev){
         selected_event = list_event;        
         $('#event_title').html(selected_event.name);        
         $.mobile.changePage('#scan', 'fade', true, true);
