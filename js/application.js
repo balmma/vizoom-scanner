@@ -95,12 +95,16 @@ function scan() {
         reset_view();
 
         alert(selected_event.name);
-
+        
         alert(result.text);
 
-        alert(result.text.length);
+        var code = $.base64.decode(result.text);
+
+        alert(code);
+
+        alert(code.length);
         
-        var code = decrypt_code(result.text,selected_event.key_n,selected_event.key_e);
+        code = decrypt_code(code,selected_event.key_n,selected_event.key_e);
         
         alert(code);
 
