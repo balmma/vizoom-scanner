@@ -7,6 +7,19 @@ var password = null;
 
 var selected_event = null;
 
+var STATUSES = {
+  0: "canceled",
+  1: "invited",
+  2: "declined",
+  3: "confirmed",
+  4: "entered"
+}
+
+var TYPES = {
+  1: "friend",
+  2: "guest"
+}
+
 $( document ).bind( "mobileinit", function() {  
   $.support.cors = true;
   $.mobile.allowCrossDomainPages = true;
@@ -94,27 +107,17 @@ function scan() {
 
         reset_view();
 
-        alert(selected_event.name);
-        
-        alert(result.text);
-
         var code = $.base64.decode(result.text);
-
-        alert(code);
-
-        alert(code.length);
-        
+               
         code = decrypt_code(code,selected_event.key_n,selected_event.key_e);
-        
-        alert(code);
-
+               
         var token = code.split(',');
         if(token.length == 9){
           var data = {
             participation_id: token[0],
             event_id: token[1],
-            type: token[2],
-            status: token[3],
+            type: TYPES[token[2]],
+            status: STATUSES[token[3]],
             surname: token[4],
             firstname: token[5],
             citycode: token[6],
@@ -127,7 +130,7 @@ function scan() {
           show_code_invalid();
         }
       }catch(e){
-          alert(e);
+          show_code_invalid(e);
       }       
     });         
   }else {
@@ -135,9 +138,13 @@ function scan() {
   }  
 }
 
-function show_code_invalid(){
+function show_code_invalid(message){
   $('body').addClass('denied');
-  $('#user_info').html("<h2>Kein gültiger Code</h2>"); 
+  var text = '<h2>Kein gültiger Code</h2>';
+  if(message){
+    text = text + '\n<h3>' + message + '</h3>'
+  }
+  $('#user_info').html(text); 
 }
 
 function process_data(data){
