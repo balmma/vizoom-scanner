@@ -130,8 +130,6 @@ function scan() {
         var code = $.base64.decode(result.text);
                
         code = decrypt_code(code,selected_event.key_n,selected_event.key_e);
-        
-        alert(code);
 
         var tokens = code.split(',');
         if(tokens.length == 10){
