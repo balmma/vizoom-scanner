@@ -108,16 +108,16 @@ function init_scanner(){
         name: tokens[1],
         start_time: tokens[2],
         end_time: tokens[3],
-        min_age: tokens[4]
-        price: tokens[5]
+        min_age: tokens[4],
+        price: tokens[5],
         friend_discount: tokens[6],
-        key_n: tokens[7]
+        key_n: tokens[7],
         key_e: tokens[8]
       }
       $('#event_title').html(selected_event.name);        
       $.mobile.changePage('#scan', 'fade', true, true);
     }
-  }
+  });
 }
 
 function scan() {
