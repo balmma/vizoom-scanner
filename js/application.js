@@ -98,6 +98,28 @@ function update_verify_user_data(user){
   $('#verify_user_info').html(text);
 }
 
+function init_scanner(){
+  new BarcodeScanner().scan(function(result) {
+    var data = $.base64.decode(result.text);
+    var tokens = code.split(',');
+    if(tokens.length == 9){
+      selected_event = {
+        id: tokens[0],
+        name: tokens[1],
+        start_time: tokens[2],
+        end_time: tokens[3],
+        min_age: tokens[4]
+        price: tokens[5]
+        friend_discount: tokens[6],
+        key_n: tokens[7]
+        key_e: tokens[8]
+      }
+      $('#event_title').html(selected_event.name);        
+      $.mobile.changePage('#scan', 'fade', true, true);
+    }
+  }
+}
+
 function scan() {
     
   if(window.BarcodeScanner){
@@ -111,18 +133,18 @@ function scan() {
                
         code = decrypt_code(code,selected_event.key_n,selected_event.key_e);
                
-        var token = code.split(',');
-        if(token.length == 9){
+        var tokens = code.split(',');
+        if(tokens.length == 9){
           var data = {
-            participation_id: token[0],
-            event_id: token[1],
-            type: TYPES[token[2]],
-            status: STATUSES[token[3]],
-            surname: token[4],
-            firstname: token[5],
-            citycode: token[6],
-            city: token[7],
-            birthday: token[8] && token[8].length > 0 ? moment(token[8],'DD-MM-YYYY') : null
+            participation_id: tokens[0],
+            event_id: tokens[1],
+            type: TYPES[tokens[2]],
+            status: STATUSES[tokens[3]],
+            surname: tokens[4],
+            firstname: tokens[5],
+            citycode: tokens[6],
+            city: tokens[7],
+            birthday: tokens[8] && tokens[8].length > 0 ? moment(tokens[8],'DD-MM-YYYY') : null
           };
           process_data(data);
         

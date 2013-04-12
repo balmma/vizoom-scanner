@@ -37,7 +37,9 @@
           <label>Kennwort</label>
           <input type="password" name="password" id="password" value="validator1" placeholder="Kennwort"/>
         </div>
-        <a id="login_button" data-role="button">Login</a>         
+        <a id="login_button" data-role="button">Login</a>
+
+        <a id="init_scanner_button" data-role="button">Scanner per Barcode initialisieren</a>         
       </div>
     </div>
 
@@ -108,6 +110,10 @@
   });
   $('#login_button').click(function(event){
     login($('#username').val(),$('#password').val());
+  });
+
+  $('#init_scanner_button').click(function(event){
+    init_scanner();
   });  
   
   
