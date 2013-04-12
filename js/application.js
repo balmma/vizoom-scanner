@@ -1,18 +1,20 @@
 ROOT = 'http://vizoom.smss.ch/_rest/';
 
-var json = null;
 var secret = null;
 var username = null;
 var password = null;
 
 var selected_event = null;
 
+var participation_data = null;
+
 var STATUSES = {
   0: "canceled",
   1: "invited",
   2: "declined",
   3: "confirmed",
-  4: "entered"
+  4: "entered",
+  5: "paid"
 }
 
 var TYPES = {
@@ -63,38 +65,26 @@ function time_string(time){
 }
 
 function update_user_data(){
-  if(json){
-    var user = json.user;
-    var text = '<p><label>Name:</label>'+user.firstname+' '+user.surname+'</p><p><label>E-Mail:</label>'+user.email+'</p><p><label>Geburtstag:</label>'+user.birthday+'</p><p><label>Alter:</label>'+user.age+'</p>';
-    if(json.status == 'confirmed_as_guest'){
-      text = text + '<h2>Gast -> Kostenloser Eintritt</h2>';
-    }else if(json.status == 'confirmed_as_guest'){
+  if(participation_data){
+    var text = '<p><label>Name:</label>'+participation_data.firstname+' '+participation_data.surname+'</p><p><label>Geburtstag:</label>'+participation_data.birthday+'</p><p><label>Alter:</label>'+user.age+'</p>';
+    if(participation_data.status == 'confirmed' && participation_data.type == 'guest'){
       text = text + '<h2>Gast</h2><h2>Kostenloser Eintritt</h2>';
       $('body').addClass('guest');
-    }else if(json.status == 'confirmed_as_friend'){
-      text = text + '<h2>Friend</h2><h2>Eintritt '+json.price.toFixed(2)+'</h2>';
-      $('body').addClass('friend');
-    }else if(json.status == 'entered_as_guest'){               
-      text = text + '<h2>Bereits validiert als Gast '+time_string(json.entry_time)+'</h2><h2>Kostenloser Eintritt</h2>';
-      $('body').addClass('guest');
-    }else if(json.status == 'entered_as_friend'){
-      var entry_time = new Date(Date.parse(json.entry_time));      
-      text = text + '<h2>Bereits validiert als Friend '+time_string(json.entry_time)+'</h2><h2>Eintritt '+json.price.toFixed(2)+'</h2>';
+    }else if(participation_data.status == 'confirmed' && participation_data.type = 'friend'){
+      text = text + '<h2>Friend</h2><h2>Eintritt '+ ((selected_event.price - selected_event.friend_discount).toFixed(2)) +'</h2>';
       $('body').addClass('friend');
     }else{
-      text = text + '<h2>Auf keiner Liste</h2>';
       $('body').addClass('denied');
+      $('#user_info').html('<h2>Auf keiner Liste.</h2><h2>Einlass verweigern!</h2>');
     }
     $('#user_info').html(text);
   }
 }
 
-function update_verify_user_data(user){
-  var text = '<p><label style="display:inline-block;width:100px;">Name:</label>'+user.firstname+' '+user.surname+'</p>';
-  text = text + '<p><label style="display:inline-block;width:100px;">Geburtstag:</label>'+user.birthday+'</p>';
-  text = text + '<p><label style="display:inline-block;width:100px;">Strasse:</label>'+user.street+'</p>';
-  text = text + '<p><label style="display:inline-block;width:100px;">Ort:</label>'+user.zip+' '+user.city+'</p>';
-  text = text + '<p><label style="display:inline-block;width:100px;">Mobile:</label>'+user.mobile+'</p>';
+function update_verify_user_data(){
+  var text = '<p><label style="display:inline-block;width:100px;">Name:</label>'+participation_data.firstname+' '+participation_data.surname+'</p>';
+  text = text + '<p><label style="display:inline-block;width:100px;">Geburtstag:</label>'+participation_data.birthday+'</p>';
+  text = text + '<p><label style="display:inline-block;width:100px;">Ort:</label>'+participation_data.citycode+' '+participation_data.city+'</p>';
   $('#verify_user_info').html(text);
 }
 
@@ -136,7 +126,7 @@ function scan() {
                
         var tokens = code.split(',');
         if(tokens.length == 9){
-          var data = {
+          participation_data = {
             participation_id: tokens[0],
             event_id: tokens[1],
             type: TYPES[tokens[2]],
@@ -147,7 +137,7 @@ function scan() {
             city: tokens[7],
             birthday: tokens[8] && tokens[8].length > 0 ? moment(tokens[8],'DD-MM-YYYY') : null
           };
-          process_data(data);
+          process_participation_data();
         
         }else {
           show_code_invalid();
@@ -170,8 +160,17 @@ function show_code_invalid(message){
   $('#user_info').html(text); 
 }
 
-function process_data(data){
-  alert(JSON.stringify(data));
+function process_participation_data(){
+  alert(JSON.stringify(participation_data));
+
+  if(participation_data.status == 'confirmed' || participation_data.status == 'entered' || participation_data.status == 'paid'){
+    update_verify_user_data();
+    $.mobile.changePage('#verify_dialog', 'pop', true, true);
+  } else {
+    $('body').addClass('denied');
+    $('#user_info').html('<h2>Auf keiner Liste.</h2><h2>Einlass verweigern!</h2>');
+  }
+
   // if(secret && surname && firstname){
   //   $('#user_info').html('Loading data for '+ firstname + ' ' + surname + ' ...'); 
     
@@ -193,10 +192,10 @@ function process_data(data){
 }
 
 function verify(){  
-  var user = json.user;
-  if(!user.identity_verified){
-    request('PUT',ROOT+'user/verify',{'user_secret': secret});
-  }
+  // var user = json.user;
+  // if(!user.identity_verified){
+  //   request('PUT',ROOT+'user/verify',{'user_secret': secret});
+  // }
   setTimeout(update_user_data,500);  
 }
 
