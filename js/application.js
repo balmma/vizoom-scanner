@@ -67,7 +67,7 @@ function time_string(time){
 function update_user_data(){
   try{
     if(participation_data){
-      var text = '<p><label>Name:</label>'+participation_data.firstname+' '+participation_data.surname+'</p><p><label>Geburtstag:</label>'+participation_data.birthday.format('DD.MM.YYYY')+'</p><p><label>Alter:</label>'+user.age+'</p>';
+      var text = '<p><label>Name:</label>'+participation_data.firstname+' '+participation_data.surname+'</p><p><label>Geburtstag:</label>'+participation_data.birthday.format('DD.MM.YYYY')+'</p><p><label>Alter:</label>'+participation_data.age+'</p>';
       if(participation_data.status == 'confirmed' && participation_data.type == 'guest'){
         text = text + '<h2>Gast</h2><h2>Kostenloser Eintritt</h2>';
         $('body').addClass('guest');
