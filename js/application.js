@@ -97,7 +97,7 @@ function update_verify_user_data(){
 }
 
 function init_scanner(){
-  new BarcodeScanner().scan(function(result) {
+  window.plugins.barcodeScanner.scan(function(result) {
     var data = $.base64.decode(result.text);
     var tokens = data.split(',');
     if(tokens.length == 9){
@@ -119,44 +119,49 @@ function init_scanner(){
 }
 
 function scan() {
-    
-  if(window.BarcodeScanner){
-    new BarcodeScanner().scan(function(result) {
-      try
-      {               
+  
+  window.plugins.barcodeScanner.scan(function(result) {
+    try
+    { 
+      reset_view();
+      if(!result.cancelled){
+        if(result.format == "QR_CODE"){  
+          var code = $.base64.decode(result.text);
+                 
+          code = decrypt_code(code,selected_event.key_n,selected_event.key_e);
 
-        reset_view();
-
-        var code = $.base64.decode(result.text);
-               
-        code = decrypt_code(code,selected_event.key_n,selected_event.key_e);
-
-        var tokens = code.split(',');
-        if(tokens.length == 10){
-          participation_data = {
-            participation_id: tokens[0],
-            event_id: tokens[1],
-            type: TYPES[tokens[2]],
-            status: STATUSES[tokens[3]],
-            surname: tokens[4],
-            firstname: tokens[5],
-            citycode: tokens[6],
-            city: tokens[7],
-            birthday: tokens[8] && tokens[8].length > 0 ? moment(tokens[8],'DD-MM-YYYY') : null,
-            age: tokens[9] && tokens[9].length > 0 ? parseInt(tokens[9],10) : null
-          };
-          process_participation_data();
-        
-        }else {
-          show_code_invalid();
+          var tokens = code.split(',');
+          if(tokens.length == 10){
+            participation_data = {
+              participation_id: tokens[0],
+              event_id: tokens[1],
+              type: TYPES[tokens[2]],
+              status: STATUSES[tokens[3]],
+              surname: tokens[4],
+              firstname: tokens[5],
+              citycode: tokens[6],
+              city: tokens[7],
+              birthday: tokens[8] && tokens[8].length > 0 ? moment(tokens[8],'DD-MM-YYYY') : null,
+              age: tokens[9] && tokens[9].length > 0 ? parseInt(tokens[9],10) : null
+            };
+            process_participation_data();
+          
+          }else {
+            show_code_invalid();
+          }
+        } else{
+          $('body').addClass('denied');
+          $('#user_info').html('<h2>Fehler beim Lesen</h2><h2>Bitte nochmals scannen</h2>');
         }
-      }catch(e){
-          show_code_invalid(e);
-      }       
-    });         
-  }else {
-    //process_secret("18y6fuhum8","Balmer","Matthias");
-  }  
+      }
+    }catch(e){
+      show_code_invalid(e);       
+    }       
+  },function(error) {
+    reset_view();
+    $('body').addClass('denied');
+    $('#user_info').html('<h2>Fehler beim Lesen</h2><h3>'+error+'</h3><h2>Bitte nochmals scannen</h2>');
+  });  
 }
 
 function show_code_invalid(message){
