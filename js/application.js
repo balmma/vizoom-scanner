@@ -120,6 +120,7 @@ function init_scanner(){
 
 function scan() {
   reset_view();
+  setTimeout(function(){
   window.plugins.barcodeScanner.scan(function(result) {
     try
     {       
@@ -159,7 +160,8 @@ function scan() {
   },function(error) {    
     $('body').addClass('denied');
     $('#user_info').html('<h2>Fehler beim Lesen</h2><h3>'+error+'</h3><h2>Bitte nochmals scannen</h2>');
-  });  
+  });
+  },100);  
 }
 
 function show_code_invalid(message){
