@@ -207,12 +207,12 @@ function process_participation_data(){
 
 function verify(){ 
   $.mobile.changePage('#scan', 'fade', true, true);
-  setTimeout(update_user_data,500) 
+  update_user_data(); 
 }
 
 function no_verify(){  
   $.mobile.changePage('#scan', 'fade', true, true);
-  setTimeout(show_identity_nod_validated,500) ;
+  show_identity_nod_validated();
 }
 
 function login(u,p){
