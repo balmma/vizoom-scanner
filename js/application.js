@@ -206,12 +206,12 @@ function process_participation_data(){
 }
 
 function verify(){ 
-  $.mobile.changePage('#scan', 'fade', true, true);
+  //$.mobile.changePage('#scan', 'fade', true, true);
   update_user_data(); 
 }
 
 function no_verify(){  
-  $.mobile.changePage('#scan', 'fade', true, true);
+  //$.mobile.changePage('#scan', 'fade', true, true);
   show_identity_nod_validated();
 }
 
