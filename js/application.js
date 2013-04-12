@@ -101,7 +101,8 @@ function update_verify_user_data(user){
 function init_scanner(){
   new BarcodeScanner().scan(function(result) {
     var data = $.base64.decode(result.text);
-    var tokens = code.split(',');
+    alert(data);
+    var tokens = data.split(',');
     if(tokens.length == 9){
       selected_event = {
         id: tokens[0],
