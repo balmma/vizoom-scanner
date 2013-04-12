@@ -70,7 +70,7 @@ function update_user_data(){
     if(participation_data.status == 'confirmed' && participation_data.type == 'guest'){
       text = text + '<h2>Gast</h2><h2>Kostenloser Eintritt</h2>';
       $('body').addClass('guest');
-    }else if(participation_data.status == 'confirmed' && participation_data.type = 'friend'){
+    }else if(participation_data.status == 'confirmed' && participation_data.type == 'friend'){
       text = text + '<h2>Friend</h2><h2>Eintritt '+ ((selected_event.price - selected_event.friend_discount).toFixed(2)) +'</h2>';
       $('body').addClass('friend');
     }else{
