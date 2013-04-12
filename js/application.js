@@ -67,7 +67,7 @@ function time_string(time){
 function update_user_data(){
   try{
     if(participation_data){
-      var text = '<p><label>Name:</label>'+participation_data.firstname+' '+participation_data.surname+'</p><p><label>Geburtstag:</label>'+participation_data.birthday.format('DD.MM.YYYY')+'</p><p><label>Alter:</label>'+participation_data.age+'</p>';
+      var text = '<p><label>Name:</label>'+participation_data.firstname+' '+participation_data.surname+'</p><p><label>Geburtstag:</label>'+(participation_data.birthday ? participation_data.birthday.format('DD.MM.YYYY') : 'unbekannt')+'</p><p><label>Alter:</label>'+(participation_data.age || 'unbekannt')+'</p>';
       if(participation_data.status == 'confirmed' && participation_data.type == 'guest'){
         text = text + '<h2>Gast</h2><h2>Kostenloser Eintritt</h2>';
         $('body').addClass('guest');
@@ -85,9 +85,13 @@ function update_user_data(){
   }
 }
 
+function calculate_age(){
+
+}
+
 function update_verify_user_data(){
   var text = '<p><label style="display:inline-block;width:100px;">Name:</label>'+participation_data.firstname+' '+participation_data.surname+'</p>';
-  text = text + '<p><label style="display:inline-block;width:100px;">Geburtstag:</label>'+participation_data.birthday.format('DD.MM.YYYY')+'</p>';
+  text = text + '<p><label style="display:inline-block;width:100px;">Geburtstag:</label>'+(participation_data.birthday ? participation_data.birthday.format('DD.MM.YYYY') : 'unbekannt')+'</p>';
   text = text + '<p><label style="display:inline-block;width:100px;">Ort:</label>'+participation_data.citycode+' '+participation_data.city+'</p>';
   $('#verify_user_info').html(text);
 }
@@ -95,7 +99,6 @@ function update_verify_user_data(){
 function init_scanner(){
   new BarcodeScanner().scan(function(result) {
     var data = $.base64.decode(result.text);
-    alert(data);
     var tokens = data.split(',');
     if(tokens.length == 9){
       selected_event = {
@@ -129,7 +132,7 @@ function scan() {
         code = decrypt_code(code,selected_event.key_n,selected_event.key_e);
                
         var tokens = code.split(',');
-        if(tokens.length == 9){
+        if(tokens.length == 10){
           participation_data = {
             participation_id: tokens[0],
             event_id: tokens[1],
@@ -139,7 +142,8 @@ function scan() {
             firstname: tokens[5],
             citycode: tokens[6],
             city: tokens[7],
-            birthday: tokens[8] && tokens[8].length > 0 ? moment(tokens[8],'DD-MM-YYYY') : null
+            birthday: tokens[8] && tokens[8].length > 0 ? moment(tokens[8],'DD-MM-YYYY') : null,
+            age: tokens[9] && tokens[9].length > 0 ? parseInt(tokens[9],10) : null
           };
           process_participation_data();
         
@@ -165,8 +169,7 @@ function show_code_invalid(message){
 }
 
 function process_participation_data(){
-  alert(JSON.stringify(participation_data));
-
+  
   if(participation_data.status == 'confirmed' || participation_data.status == 'entered' || participation_data.status == 'paid'){
     update_verify_user_data();
     $.mobile.changePage('#verify_dialog', 'pop', true, true);
@@ -196,7 +199,6 @@ function process_participation_data(){
 }
 
 function verify(){
-  alert('verify');  
   // var user = json.user;
   // if(!user.identity_verified){
   //   request('PUT',ROOT+'user/verify',{'user_secret': secret});
