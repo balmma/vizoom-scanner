@@ -65,25 +65,29 @@ function time_string(time){
 }
 
 function update_user_data(){
-  if(participation_data){
-    var text = '<p><label>Name:</label>'+participation_data.firstname+' '+participation_data.surname+'</p><p><label>Geburtstag:</label>'+participation_data.birthday+'</p><p><label>Alter:</label>'+user.age+'</p>';
-    if(participation_data.status == 'confirmed' && participation_data.type == 'guest'){
-      text = text + '<h2>Gast</h2><h2>Kostenloser Eintritt</h2>';
-      $('body').addClass('guest');
-    }else if(participation_data.status == 'confirmed' && participation_data.type == 'friend'){
-      text = text + '<h2>Friend</h2><h2>Eintritt '+ ((selected_event.price - selected_event.friend_discount).toFixed(2)) +'</h2>';
-      $('body').addClass('friend');
-    }else{
-      $('body').addClass('denied');
-      $('#user_info').html('<h2>Auf keiner Liste.</h2><h2>Einlass verweigern!</h2>');
+  try{
+    if(participation_data){
+      var text = '<p><label>Name:</label>'+participation_data.firstname+' '+participation_data.surname+'</p><p><label>Geburtstag:</label>'+participation_data.birthday.format('DD.MM.YYYY')+'</p><p><label>Alter:</label>'+user.age+'</p>';
+      if(participation_data.status == 'confirmed' && participation_data.type == 'guest'){
+        text = text + '<h2>Gast</h2><h2>Kostenloser Eintritt</h2>';
+        $('body').addClass('guest');
+      }else if(participation_data.status == 'confirmed' && participation_data.type == 'friend'){
+        text = text + '<h2>Friend</h2><h2>Eintritt '+ ((selected_event.price - selected_event.friend_discount).toFixed(2)) +'</h2>';
+        $('body').addClass('friend');
+      }else{
+        $('body').addClass('denied');
+        $('#user_info').html('<h2>Auf keiner Liste.</h2><h2>Einlass verweigern!</h2>');
+      }
+      $('#user_info').html(text);
     }
-    $('#user_info').html(text);
+  }catch(ex){
+    alert(ex);
   }
 }
 
 function update_verify_user_data(){
   var text = '<p><label style="display:inline-block;width:100px;">Name:</label>'+participation_data.firstname+' '+participation_data.surname+'</p>';
-  text = text + '<p><label style="display:inline-block;width:100px;">Geburtstag:</label>'+participation_data.birthday+'</p>';
+  text = text + '<p><label style="display:inline-block;width:100px;">Geburtstag:</label>'+participation_data.birthday.format('DD.MM.YYYY')+'</p>';
   text = text + '<p><label style="display:inline-block;width:100px;">Ort:</label>'+participation_data.citycode+' '+participation_data.city+'</p>';
   $('#verify_user_info').html(text);
 }
@@ -191,7 +195,8 @@ function process_participation_data(){
   setTimeout(fixgeometry,500);
 }
 
-function verify(){  
+function verify(){
+  alert('verify');  
   // var user = json.user;
   // if(!user.identity_verified){
   //   request('PUT',ROOT+'user/verify',{'user_secret': secret});
