@@ -171,6 +171,11 @@ function show_code_invalid(message){
   $('#user_info').html(text); 
 }
 
+function show_identity_nod_validated(){
+  $('body').addClass('denied');
+  $('#user_info').html('<h2>Identität nicht verifiziert.</h2><h2>Einlass verweigern!</h2>');
+}
+
 function process_participation_data(){  
   if(participation_data.status == 'confirmed' || participation_data.status == 'entered' || participation_data.status == 'paid'){
     update_verify_user_data();
@@ -201,14 +206,13 @@ function process_participation_data(){
 }
 
 function verify(){ 
-  update_user_data();
-  $.mobile.changePage('#scan', 'fade', true, true); 
+  $.mobile.changePage('#scan', 'fade', true, true);
+  setTimeout(update_user_data,500) 
 }
 
-function no_verify(){
-  $('body').addClass('denied');
-  $('#user_info').html('<h2>Identität nicht verifiziert.</h2><h2>Einlass verweigern!</h2>');
+function no_verify(){  
   $.mobile.changePage('#scan', 'fade', true, true);
+  setTimeout(show_identity_nod_validated,500) ;
 }
 
 function login(u,p){
