@@ -119,11 +119,10 @@ function init_scanner(){
 }
 
 function scan() {
-  
+  reset_view();
   window.plugins.barcodeScanner.scan(function(result) {
     try
-    { 
-      reset_view();
+    {       
       if(!result.cancelled){
         if(result.format == "QR_CODE"){  
           var code = $.base64.decode(result.text);
@@ -157,8 +156,7 @@ function scan() {
     }catch(e){
       show_code_invalid(e);       
     }       
-  },function(error) {
-    reset_view();
+  },function(error) {    
     $('body').addClass('denied');
     $('#user_info').html('<h2>Fehler beim Lesen</h2><h3>'+error+'</h3><h2>Bitte nochmals scannen</h2>');
   });  
