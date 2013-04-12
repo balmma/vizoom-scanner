@@ -87,7 +87,7 @@
         <p>Bitte die Identität mittels eines amtlichen Ausweises bestätigen.</p>
         <div id="verify_user_info"></div>
         <a id="verify_button" data-role="button">Bestätigen</a>
-        <a href="#scan" data-role="button">Nicht bestätigen</a>       
+        <a id="no_verify_button" data-role="button">Nicht bestätigen</a>       
       </div>      
     </div>
        
@@ -104,17 +104,13 @@
   $('#scan_button').click(function(event){
     scan();
   });  
-  $('#verify_button').click(function(event){
-    $.mobile.changePage('#scan', 'fade', true, true);
-    verify();
-  });
+  $('#verify_button').click(verify);
+  $('#no_verify_button').click(no_verify);  
   $('#login_button').click(function(event){
     login($('#username').val(),$('#password').val());
   });
 
-  $('#init_scanner_button').click(function(event){
-    init_scanner();
-  });  
+  $('#init_scanner_button').click(init_scanner);  
   
   
 </script>
